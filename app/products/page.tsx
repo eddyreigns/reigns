@@ -233,8 +233,8 @@ export default function ProductsPage() {
                     onPageChange={setCurrentPage}
                   />
                 </LazyWrapper>
-              )}
-            </div>
+              </div>
+            )}
           </>
         )}
 
