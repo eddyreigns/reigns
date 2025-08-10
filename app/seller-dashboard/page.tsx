@@ -521,3 +521,5 @@ function SellerDashboard() {
     </div>
   )
 }
+
+export default withAuth(SellerDashboard)
