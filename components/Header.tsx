@@ -13,10 +13,10 @@ function Header() {
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout()
     setShowUserMenu(false)
-  }
+  }, [logout])
 
   // Close dropdown when clicking outside
   useEffect(() => {
