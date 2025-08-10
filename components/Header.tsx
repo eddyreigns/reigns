@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
-import Image from 'next/image'
+import OptimizedImage from './OptimizedImage'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
