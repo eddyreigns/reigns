@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from '../../lib/auth'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -9,17 +11,21 @@ export default function LoginPage() {
     password: '',
     rememberMe: false
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const { login, isLoading } = useAuth()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      console.log('Login attempt:', formData)
-    }, 1000)
+    setError('')
+
+    const success = await login(formData.email, formData.password)
+
+    if (success) {
+      router.push('/')
+    } else {
+      setError('Invalid email or password. Try: admin@reigns.com / admin123')
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +43,20 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
             <p className="text-gray-600">Sign in to your Reigns account</p>
+            {error && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 className="text-sm font-semibold text-blue-800 mb-2">Demo Accounts:</h3>
+            <div className="text-xs text-blue-700 space-y-1">
+              <p><strong>Admin:</strong> admin@reigns.com / admin123</p>
+              <p><strong>Seller:</strong> seller@reigns.com / seller123</p>
+              <p><strong>Buyer:</strong> buyer@reigns.com / buyer123</p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
