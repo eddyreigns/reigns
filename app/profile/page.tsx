@@ -1,20 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useAuth, withAuth } from '../../lib/auth'
+import Image from 'next/image'
 
-export default function ProfilePage() {
+function ProfilePage() {
+  const { user, updateProfile } = useAuth()
   const [activeTab, setActiveTab] = useState('profile')
   const [profileData, setProfileData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
     phone: '+1 (555) 123-4567',
     address: '123 Main St',
     city: 'New York',
     zipCode: '10001',
     country: 'United States'
   })
+
+  useEffect(() => {
+    if (user) {
+      setProfileData(prev => ({
+        ...prev,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+      }))
+    }
+  }, [user])
 
   const orders = [
     {
@@ -58,9 +72,26 @@ export default function ProfilePage() {
       <div className="profile-container">
         <div className="profile-sidebar">
           <div className="profile-avatar">
-            <div className="avatar-circle">JD</div>
-            <h3>{profileData.firstName} {profileData.lastName}</h3>
-            <p>Member since Jan 2024</p>
+            {user?.profilePicture || user?.shopLogo ? (
+              <Image
+                src={user.profilePicture || user.shopLogo || ''}
+                alt={`${user.firstName} ${user.lastName}`}
+                width={80}
+                height={80}
+                className={`object-cover ${user.profilePicture ? 'rounded-full' : 'rounded-lg'}`}
+              />
+            ) : (
+              <div className="avatar-circle">
+                {user?.firstName?.[0]}{user?.lastName?.[0]}
+              </div>
+            )}
+            <h3>{user?.firstName} {user?.lastName}</h3>
+            <p>Member since {user?.joinedAt ? new Date(user.joinedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Recently'}</p>
+            {user?.accountType && (
+              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full capitalize">
+                {user.accountType === 'both' ? 'Buyer & Seller' : user.accountType}
+              </span>
+            )}
           </div>
 
           <nav className="profile-nav">
