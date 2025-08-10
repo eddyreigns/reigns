@@ -1,5 +1,6 @@
 import './globals.css'
 import Header from '../components/Header'
+import { AuthProvider } from '../lib/auth'
 
 export const metadata = {
   title: 'Reigns - My Beautiful Market',
@@ -14,10 +15,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-gray-50">
-        <Header />
-        <main className="pt-16 md:pt-20 min-h-screen">
-          {children}
-        </main>
+        <AuthProvider>
+          <Header />
+          <main className="pt-16 md:pt-20 min-h-screen">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   )
