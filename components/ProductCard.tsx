@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import { memo, useMemo, useState, useCallback } from 'react'
+import OptimizedImage from './OptimizedImage'
 
 interface Product {
   id: string
