@@ -71,20 +71,20 @@ export default function ProductsPage() {
   const [filterBy, setFilterBy] = useState('all')
 
   return (
-    <div className="products-page">
-      <div className="products-container">
-        <div className="products-header">
-          <h1>All Products</h1>
-          <p>Discover amazing products from trusted sellers</p>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">All Products</h1>
+          <p className="text-xl text-gray-600">Discover amazing products from trusted sellers</p>
         </div>
 
-        <div className="products-filters">
-          <div className="filter-group">
-            <label>Sort by:</label>
+        <div className="flex flex-col md:flex-row gap-4 mb-8 p-6 bg-white rounded-xl shadow-sm">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-gray-700">Sort by:</label>
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value)}
-              className="filter-select"
+              className="input-field min-w-[180px]"
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -94,12 +94,12 @@ export default function ProductsPage() {
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>Filter by:</label>
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-gray-700">Filter by:</label>
             <select 
               value={filterBy} 
               onChange={(e) => setFilterBy(e.target.value)}
-              className="filter-select"
+              className="input-field min-w-[180px]"
             >
               <option value="all">All Products</option>
               <option value="sale">On Sale</option>
@@ -109,18 +109,30 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        <div className="products-grid">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
           {sampleProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        <div className="pagination">
-          <button className="page-button">Previous</button>
-          <button className="page-button active">1</button>
-          <button className="page-button">2</button>
-          <button className="page-button">3</button>
-          <button className="page-button">Next</button>
+        <div className="flex justify-center">
+          <nav className="flex items-center gap-2">
+            <button className="px-4 py-2 border border-gray-300 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              Previous
+            </button>
+            <button className="px-4 py-2 bg-primary-500 text-white rounded-lg font-medium">
+              1
+            </button>
+            <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              2
+            </button>
+            <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              3
+            </button>
+            <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              Next
+            </button>
+          </nav>
         </div>
       </div>
     </div>
