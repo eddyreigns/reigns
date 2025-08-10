@@ -41,11 +41,13 @@ class ClientCache {
   // Memory management
   cleanup() {
     const now = Date.now()
-    for (const [key, expiry] of this.expiryMap.entries()) {
+    const keysToDelete: string[] = []
+    this.expiryMap.forEach((expiry, key) => {
       if (now > expiry) {
-        this.delete(key)
+        keysToDelete.push(key)
       }
-    }
+    })
+    keysToDelete.forEach(key => this.delete(key))
   }
 }
 
