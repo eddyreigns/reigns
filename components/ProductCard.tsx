@@ -18,13 +18,33 @@ interface ProductCardProps {
   product: Product
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
-  const discountPercentage = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0
+function ProductCard({ product }: ProductCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  const discountPercentage = useMemo(() =>
+    product.originalPrice
+      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      : 0,
+    [product.originalPrice, product.price]
+  )
+
+  const starRating = useMemo(() =>
+    [...Array(5)].map((_, i) => ({
+      filled: i < Math.floor(product.rating),
+      key: i
+    })),
+    [product.rating]
+  )
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), [])
+  const handleMouseLeave = useCallback(() => setIsHovered(false), [])
 
   return (
-    <div className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-3 hover:scale-105">
+    <div
+      className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-3 hover:scale-105"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Product Link */}
       <Link href={`/products/${product.id}`} className="block">
         {/* Image Container */}
