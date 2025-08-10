@@ -1,6 +1,10 @@
+'use client'
+
 import Link from 'next/link'
+import { useAuth } from '../lib/auth'
 
 export default function Footer() {
+  const { isAuthenticated } = useAuth()
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -49,10 +53,17 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Account</h4>
             <div className="space-y-3">
-              <Link href="/login" className="block text-gray-300 hover:text-white transition-colors duration-200">Sign In</Link>
-              <Link href="/register" className="block text-gray-300 hover:text-white transition-colors duration-200">Register</Link>
-              <Link href="/profile" className="block text-gray-300 hover:text-white transition-colors duration-200">My Account</Link>
-              <Link href="/orders" className="block text-gray-300 hover:text-white transition-colors duration-200">Order History</Link>
+              {!isAuthenticated ? (
+                <>
+                  <Link href="/login" className="block text-gray-300 hover:text-white transition-colors duration-200">Sign In</Link>
+                  <Link href="/register" className="block text-gray-300 hover:text-white transition-colors duration-200">Register</Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/profile" className="block text-gray-300 hover:text-white transition-colors duration-200">My Account</Link>
+                  <Link href="/orders" className="block text-gray-300 hover:text-white transition-colors duration-200">Order History</Link>
+                </>
+              )}
             </div>
           </div>
 
