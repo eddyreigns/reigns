@@ -79,8 +79,9 @@ export function logBundleSize() {
   // Monitor resource loading
   const observer = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
-      if (entry.name.includes('.js') && entry.transferSize) {
-        console.log(`Bundle ${entry.name}: ${(entry.transferSize / 1024).toFixed(2)}KB`)
+      const resourceEntry = entry as PerformanceResourceTiming
+      if (entry.name.includes('.js') && resourceEntry.transferSize) {
+        console.log(`Bundle ${entry.name}: ${(resourceEntry.transferSize / 1024).toFixed(2)}KB`)
       }
     }
   })
