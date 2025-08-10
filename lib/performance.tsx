@@ -15,7 +15,7 @@ export function usePerformanceMonitor() {
         const observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
             if (entry.name === metricName) {
-              callback(entry.value || (entry as any).startTime)
+              callback((entry as any).value || entry.startTime)
             }
           }
         })
