@@ -253,12 +253,13 @@ function Header() {
                   )
                 ) : (
                   user.profilePicture && (
-                    <Image
+                    <OptimizedImage
                       src={user.profilePicture}
                       alt={`${user.firstName} ${user.lastName}`}
                       width={32}
                       height={32}
                       className="rounded-full object-cover"
+                      priority={true}
                     />
                   )
                 )}
