@@ -1,4 +1,21 @@
-export default function Home() {
+'use client'
+
+import { useEffect, memo } from 'react'
+import { usePerformanceMonitor, preloadCriticalResources } from '../lib/performance'
+import Link from 'next/link'
+
+function Home() {
+  const { measureComponent } = usePerformanceMonitor()
+
+  useEffect(() => {
+    // Preload critical resources
+    preloadCriticalResources()
+
+    // Measure component performance
+    measureComponent('HomePage', () => {
+      console.log('Home page rendered')
+    })
+  }, [])
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
       <div className="max-w-4xl mx-auto text-center">
@@ -34,21 +51,25 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/products" 
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-xl transition-colors"
+            <Link
+              href="/products"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 transform"
+              prefetch={true}
             >
               Explore Products
-            </a>
-            <a 
-              href="/seller-dashboard" 
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold px-8 py-4 rounded-xl transition-all"
+            </Link>
+            <Link
+              href="/seller-dashboard"
+              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 transform"
+              prefetch={false}
             >
               Start Selling
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </div>
   )
 }
+
+export default memo(Home)
