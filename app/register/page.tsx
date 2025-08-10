@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from '../../lib/auth'
+import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -11,25 +13,36 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
     accountType: 'buyer',
+    shopName: '',
     acceptTerms: false
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const { register, isLoading } = useAuth()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    
+    setError('')
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match')
-      setIsLoading(false)
+      setError('Passwords do not match')
       return
     }
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      console.log('Registration attempt:', formData)
-    }, 1000)
+
+    const success = await register({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      accountType: formData.accountType as 'buyer' | 'seller' | 'both',
+      shopName: formData.shopName
+    })
+
+    if (success) {
+      router.push('/')
+    } else {
+      setError('Registration failed. Please try again.')
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -48,6 +61,11 @@ export default function RegisterPage() {
           <div className="auth-header">
             <h1>Create Account</h1>
             <p>Join the Reigns marketplace community</p>
+            {error && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -105,6 +123,21 @@ export default function RegisterPage() {
                 <option value="both">Both - I want to buy and sell</option>
               </select>
             </div>
+
+            {(formData.accountType === 'seller' || formData.accountType === 'both') && (
+              <div className="form-group">
+                <label htmlFor="shopName">Shop Name</label>
+                <input
+                  type="text"
+                  id="shopName"
+                  name="shopName"
+                  value={formData.shopName}
+                  onChange={handleChange}
+                  placeholder="Enter your shop name"
+                  className="form-select"
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
