@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+// Rate limiting and caching
+const rateLimitMap = new Map()
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000 // 15 minutes
+const RATE_LIMIT_MAX_ATTEMPTS = 5
+
 // Mock user database - In production, use a real database
 const mockUsers = [
   {
@@ -46,6 +51,31 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-i
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+    const now = Date.now()
+    const clientRateLimit = rateLimitMap.get(clientIP) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW }
+
+    if (now > clientRateLimit.resetTime) {
+      clientRateLimit.count = 0
+      clientRateLimit.resetTime = now + RATE_LIMIT_WINDOW
+    }
+
+    if (clientRateLimit.count >= RATE_LIMIT_MAX_ATTEMPTS) {
+      return NextResponse.json(
+        { message: 'Too many login attempts. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((clientRateLimit.resetTime - now) / 1000))
+          }
+        }
+      )
+    }
+
+    clientRateLimit.count++
+    rateLimitMap.set(clientIP, clientRateLimit)
+
     const { email, password } = await request.json()
 
     // Validate input
@@ -90,11 +120,22 @@ export async function POST(request: NextRequest) {
     // Remove password from response
     const { password: _, ...userWithoutPassword } = user
 
-    return NextResponse.json({
+    // Reset rate limit on successful login
+    rateLimitMap.delete(clientIP)
+
+    const response = NextResponse.json({
       message: 'Login successful',
       user: userWithoutPassword,
       token
     })
+
+    // Set security headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('X-XSS-Protection', '1; mode=block')
+
+    return response
 
   } catch (error) {
     console.error('Login error:', error)
