@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
 import Image from 'next/image'
 
@@ -11,10 +11,26 @@ export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const { user, isAuthenticated, logout } = useAuth()
 
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
   const handleLogout = () => {
     logout()
     setShowUserMenu(false)
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-white/20 z-50 shadow-lg">
@@ -84,7 +100,7 @@ export default function Header() {
             
             {/* User Profile / Login Button */}
             {isAuthenticated && user ? (
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="flex items-center gap-3 group p-2 rounded-xl hover:bg-white/50 transition-all duration-300"
