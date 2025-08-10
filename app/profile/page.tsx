@@ -125,9 +125,11 @@ function ProfilePage() {
             >
               🔒 Security
             </button>
-            <Link href="/seller-dashboard" className="profile-nav-link">
-              🏪 Seller Dashboard
-            </Link>
+            {(user?.accountType === 'seller' || user?.accountType === 'both') && (
+              <Link href="/seller-dashboard" className="profile-nav-link">
+                🏪 Seller Dashboard
+              </Link>
+            )}
           </nav>
         </div>
 
