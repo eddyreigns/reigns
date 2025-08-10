@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, memo, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
 import OptimizedImage from './OptimizedImage'
 
-export default function Header() {
+function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(3)
   const [showUserMenu, setShowUserMenu] = useState(false)
