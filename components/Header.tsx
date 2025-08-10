@@ -126,12 +126,13 @@ function Header() {
                     ) : (
                       <div className="flex items-center gap-2">
                         {user.profilePicture && (
-                          <Image
+                          <OptimizedImage
                             src={user.profilePicture}
                             alt={`${user.firstName} ${user.lastName}`}
                             width={40}
                             height={40}
                             className="rounded-full object-cover ring-2 ring-blue-500/20 group-hover:ring-blue-500/50 transition-all duration-300"
+                            priority={true}
                           />
                         )}
                         <div className="hidden md:block text-left">
