@@ -2,8 +2,28 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAuth, withAuth } from '../../lib/auth'
 
-export default function SellerDashboard() {
+function SellerDashboard() {
+  const { user } = useAuth()
+
+  // Ensure only sellers and admin can access
+  if (user && user.accountType === 'buyer') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
+          <p className="text-gray-600 mb-6">You need a seller account to access this page.</p>
+          <Link
+            href="/"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+          >
+            Go Home
+          </Link>
+        </div>
+      </div>
+    )
+  }
   const [activeTab, setActiveTab] = useState('overview')
   
   const stats = {
@@ -33,9 +53,11 @@ export default function SellerDashboard() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Seller Dashboard
+              {user?.shopName || 'Seller Dashboard'}
             </h1>
-            <p className="text-gray-600 mt-2">Manage your store and track performance</p>
+            <p className="text-gray-600 mt-2">
+              Welcome back, {user?.firstName}! Manage your store and track performance
+            </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link 
