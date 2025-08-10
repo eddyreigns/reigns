@@ -86,11 +86,11 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Rating */}
           <div className="flex items-center gap-2 mb-3">
             <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
+              {starRating.map(({ filled, key }) => (
                 <svg
-                  key={i}
+                  key={key}
                   className={`w-4 h-4 ${
-                    i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'
+                    filled ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   fill="currentColor"
                   viewBox="0 0 24 24"
