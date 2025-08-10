@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import { AuthProvider } from '../lib/auth'
 import { Suspense } from 'react'
 import { SkeletonLoader } from '../components/SkeletonLoader'
+import PerformanceMonitor from '../components/PerformanceMonitor'
 
 export const metadata = {
   title: 'Reigns - My Beautiful Market',
