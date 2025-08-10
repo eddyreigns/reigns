@@ -94,6 +94,7 @@ export default function RootLayout({
             </Suspense>
           </main>
         </AuthProvider>
+        <PerformanceMonitor />
       </body>
     </html>
   )
