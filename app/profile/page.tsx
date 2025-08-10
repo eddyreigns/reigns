@@ -285,3 +285,5 @@ function ProfilePage() {
     </div>
   )
 }
+
+export default withAuth(ProfilePage)
