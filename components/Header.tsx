@@ -242,12 +242,13 @@ function Header() {
               <div className="flex items-center gap-3 p-3 bg-white/50 rounded-xl">
                 {user.accountType === 'seller' || user.accountType === 'both' ? (
                   user.shopLogo && (
-                    <Image
+                    <OptimizedImage
                       src={user.shopLogo}
                       alt={user.shopName || 'Shop logo'}
                       width={32}
                       height={32}
                       className="rounded-lg object-cover"
+                      priority={true}
                     />
                   )
                 ) : (
