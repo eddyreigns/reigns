@@ -177,9 +177,8 @@ export default function ProductsPage() {
         <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between">
           <div className="flex-1 max-w-md">
             <LazyWrapper fallback={<div className="h-12 bg-gray-200 rounded-lg animate-pulse" />}>
-              <SearchBar 
-                value={searchTerm}
-                onChange={setSearchTerm}
+              <SearchBar
+                onSearch={setSearchTerm}
                 placeholder="Search products..."
               />
             </LazyWrapper>
