@@ -126,17 +126,35 @@ function ProductCard({ product }: ProductCardProps) {
       
       {/* Add to Cart Button */}
       <div className="px-6 pb-6">
-        <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-2xl opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative overflow-hidden">
+        <button
+          className={`w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative overflow-hidden ${
+            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          }`}
+          onClick={(e) => {
+            e.preventDefault()
+            // Add to cart logic here
+          }}
+        >
           <span className="relative z-10">Add to Cart</span>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
         </button>
       </div>
-      
+
       {/* Decorative Elements */}
       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 transform rotate-45 translate-x-10 -translate-y-10 opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
-      
+
       {/* Hover glow effect */}
       <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-indigo-600/10 to-transparent pointer-events-none"></div>
     </div>
   )
 }
+
+export default memo(ProductCard, (prevProps, nextProps) => {
+  return (
+    prevProps.product.id === nextProps.product.id &&
+    prevProps.product.price === nextProps.product.price &&
+    prevProps.product.originalPrice === nextProps.product.originalPrice &&
+    prevProps.product.rating === nextProps.product.rating &&
+    prevProps.product.reviews === nextProps.product.reviews
+  )
+})
