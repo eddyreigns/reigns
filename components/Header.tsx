@@ -287,3 +287,5 @@ function Header() {
     </header>
   )
 }
+
+export default memo(Header)
